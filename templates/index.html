@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}News{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-6 offset-md-3">
+      <h3 class="text-center">Welcome to newsme😄📰</h3>
+      {% if not hide_me %}
+      <form action="{% url 'news:scrape' %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary btn-md">Get today's news</button>
+      </form>
+      {% else %}
+      <p>Your next feed is in {{ next_scrape }} hours.</p>
+      {% endif %}
+
+      
+      {% for news_article in news_articles %}
+      <div class="card mb-3" style="max-width: 540px;">
+        <div class="row no-gutters">
+          <div class="col-md-4">
+            <img src="{{ news_article.image.url }}" class="card-img" alt="...">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title"><a href="{{ news_article.url }}" class="card-link">{{ news_article.title }}</a></h5>
+              <p class="card-text">{{ news_article.summary }}</p>
+              <p class="card-text"><small class="text-muted">Last updated {{ time_difference_in_hours }} mins ago</small></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock content %}
